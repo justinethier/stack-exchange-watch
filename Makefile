@@ -2,7 +2,7 @@ CC = gcc
 CSTD = -std=c99
 CFLAGS = $(CSTD) -g
 
-COBJ = stack-exchange-poll http se-api util
+COBJ = main http se-api util
 CFILES = $(addsuffix .c, $(COBJ))
 #COBJS = $(addsuffix .o, $(COBJ))
 
