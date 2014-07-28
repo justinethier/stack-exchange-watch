@@ -161,9 +161,12 @@ int main() {
   struct SeQuestion **oldQs = NULL;
   struct SeQuestion **newQs = NULL;
   while(1) {
+    tracef("Woke up, checking %s\n", url);
     struct MemoryStruct *apiData = http_get(url);
     newQs = se_load(apiData->memory, &numNewQs);
+    tracef("Received %d questions\n", numNewQs);
     if (oldQs != NULL) {
+      trace("Checking for updates\n");
       se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
     }
     se_free_questions(oldQs, numOldQs);
