@@ -1,6 +1,7 @@
-// JSON parser code from http://linuxprograms.wordpress.com/2010/08/19/json_parser_json-c/
 #include <curl/curl.h>
 #include <json/json.h>
+#include <ctype.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,84 +12,8 @@
 
 #define MAX_UPDATE_SIZE 10
 
-// /*printing the value corresponding to boolean, double, integer and strings*/
-// void print_json_value(json_object *jobj){
-//   enum json_type type;
-//   printf("type: %d\n", type);
-//   type = json_object_get_type(jobj); /*Getting the type of the json object*/
-//   switch (type) {
-//     case json_type_boolean: printf("json_type_booleann");
-//                          printf("value: %sn", json_object_get_boolean(jobj)? "true": "false");
-//                          break;
-//     case json_type_double: printf("json_type_doublen");
-//                         printf("          value: %lfn", json_object_get_double(jobj));
-//                          break;
-//     case json_type_int: printf("json_type_intn");
-//                         printf("          value: %dn", json_object_get_int(jobj));
-//                          break;
-//     case json_type_string: printf("json_type_stringn");
-//                          printf("          value: %sn", json_object_get_string(jobj));
-//                          break;
-//   }
-// 
-// }
-// 
-// void json_parse_array( json_object *jobj, char *key) {
-//   void json_parse(json_object * jobj); /*Forward Declaration*/
-//   enum json_type type;
-// 
-//   json_object *jarray = jobj; /*Simply get the array*/
-//   if(key) {
-//     jarray = json_object_object_get(jobj, key); /*Getting the array if it is a key value pair*/
-//   }
-// 
-//   int arraylen = json_object_array_length(jarray); /*Getting the length of the array*/
-//   printf("Array Length: %dn",arraylen);
-//   int i;
-//   json_object * jvalue;
-// 
-//   for (i=0; i< arraylen; i++){
-//     jvalue = json_object_array_get_idx(jarray, i); /*Getting the array element at position i*/
-//     type = json_object_get_type(jvalue);
-//     if (type == json_type_array) {
-//       json_parse_array(jvalue, NULL);
-//     }
-//     else if (type != json_type_object) {
-//       printf("value[%d]: ",i);
-//       print_json_value(jvalue);
-//     }
-//     else {
-//       json_parse(jvalue);
-//     }
-//   }
-// }
-// 
-// /*Parsing the json object*/
-// void json_parse(json_object * jobj) {
-//   enum json_type type;
-//   json_object_object_foreach(jobj, key, val) { /*Passing through every array element*/
-//     printf("type: %d\n", type);
-//     type = json_object_get_type(val);
-//     switch (type) {
-//       case json_type_boolean: 
-//       case json_type_double: 
-//       case json_type_int: 
-//       case json_type_string: 
-//         print_json_value(val);
-//         break; 
-//       case json_type_object: 
-//         printf("json_type_objectn");
-//         jobj = json_object_object_get(jobj, key);
-//         json_parse(jobj); 
-//         break;
-//       case json_type_array: 
-//         printf("type: json_type_array, ");
-//         json_parse_array(jobj, key);
-//         break;
-//     }
-//   }
-// } 
-
+// Based on JSON parser code from 
+// http://linuxprograms.wordpress.com/2010/08/19/json_parser_json-c/
 struct SeQuestion **parse_se(json_object *jobj, int *result_size) {
   struct SeQuestion **results = 
     (struct SeQuestion **)calloc(sizeof(struct SeQuestion *), MAX_UPDATE_SIZE);
@@ -145,17 +70,19 @@ struct SeQuestion **se_load(char *string, int *numQs) {
 // could specify API string, poll rate (in minutes, no less than 1) from cli
 // if none are specified, maybe read from a .rc file?
 // otherwise either give up or use default (not sure default search makes any sense, though. probably better to print link to the SE API query page)
-int main() {
+void watch() {
   int poll_rate_mins = 15;
   char url[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&min=10&sort=activity&tagged=a-song-of-ice-and-fire&site=scifi";
   int numOldQs = 0;
   int numNewQs = 0;
 
+// TODO: move test code to another file, and add to makefile
 // Test code:
 //  struct SeQuestion **oldQs = 
 //    se_load(getFileContents("results.json", NULL), &numOldQs);
 //  struct SeQuestion **newQs = 
 //    se_load(getFileContents("results2.json", NULL), &numNewQs);
+// TODO: let this return a value so we can test for it
 //  se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
 
   struct SeQuestion **oldQs = NULL;
@@ -178,5 +105,45 @@ int main() {
 
   se_free_questions(oldQs, numOldQs);
   se_free_questions(newQs, numNewQs);
+}
+
+int main(int argc, char **argv) {
+  int c;
+  int pollrate = 15; // mins
+  int pagesize = 10;
+  char *tags = "";
+  char *site = "";
+
+  while ((c = getopt (argc, argv, "abt:")) != -1) {
+    switch (c) {
+//      case 'a':
+//        aflag = 1;
+//        break;
+//      case 'b':
+//        bflag = 1;
+//        break;
+      case 't':
+        tags = optarg;
+        break;
+      case '?':
+        if (optopt == 't')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+      default:
+        abort ();
+    }
+  }
+
+  printf("Tags = %s\n", tags);
+
+// TODO: pass args to core function:
+  //watch();
   return 0;
 }
+
