@@ -51,6 +51,7 @@ void watch(int page_size, int poll_rate_mins,
     sleep(60 * poll_rate_mins);
   }
 
+  free(url);
   se_free_questions(oldQs, numOldQs);
   se_free_questions(newQs, numNewQs);
 }
@@ -81,7 +82,7 @@ int main(int argc, char **argv) {
   int pollrate = 15; // mins
   int pagesize = 10;
   char *tags = "";
-  char *site = "";
+  char *site = "stackoverflow";
 
   static struct option long_options[] =
   {

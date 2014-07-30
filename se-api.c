@@ -89,35 +89,50 @@ struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size,
 
   if (type == json_type_object) {
     json_object *items = json_object_object_get(jobj, "items");
-    type = json_object_get_type(items);
 
-    if (type == json_type_array) {
-      int len = json_object_array_length(items);
-      for (int i = 0; i < len; i++) {
-        json_object *jval = json_object_array_get_idx(items, i);
-        if (json_object_get_type(jval) == json_type_object) {
-          json_object *jqid = json_object_object_get(jval, "question_id");
-          json_object *jlact = json_object_object_get(jval, "last_activity_date");
-          json_object *jtitle = json_object_object_get(jval, "title");
-          json_object *jlink = json_object_object_get(jval, "link");
-          json_object *jscore = json_object_object_get(jval, "score");
-          json_object *jnum_ans = json_object_object_get(jval, "answer_count");
-          json_object *jnum_views = json_object_object_get(jval, "view_count");
-          struct SeQuestion *q = se_new_question(
-              json_object_get_int(jqid)
-            , json_object_get_int(jscore)
-            , json_object_get_int(jnum_ans)
-            , json_object_get_int(jnum_views)
-            , json_object_get_int(jlact)
-            , json_object_get_string(jtitle)
-            , json_object_get_string(jlink)
-          ); 
-          //se_print_question(q);
-          results[result_idx++] = q;
+    if (items) {
+      type = json_object_get_type(items);
+  
+      if (type == json_type_array) {
+        int len = json_object_array_length(items);
+        for (int i = 0; i < len; i++) {
+          json_object *jval = json_object_array_get_idx(items, i);
+          if (json_object_get_type(jval) == json_type_object) {
+            json_object *jqid = json_object_object_get(jval, "question_id");
+            json_object *jlact = json_object_object_get(jval, "last_activity_date");
+            json_object *jtitle = json_object_object_get(jval, "title");
+            json_object *jlink = json_object_object_get(jval, "link");
+            json_object *jscore = json_object_object_get(jval, "score");
+            json_object *jnum_ans = json_object_object_get(jval, "answer_count");
+            json_object *jnum_views = json_object_object_get(jval, "view_count");
+            struct SeQuestion *q = se_new_question(
+                json_object_get_int(jqid)
+              , json_object_get_int(jscore)
+              , json_object_get_int(jnum_ans)
+              , json_object_get_int(jnum_views)
+              , json_object_get_int(jlact)
+              , json_object_get_string(jtitle)
+              , json_object_get_string(jlink)
+            ); 
+            //se_print_question(q);
+            results[result_idx++] = q;
+          }
         }
+      } else {
+        printf("Unexpected json type\n");
       }
     } else {
-      printf("Unexpected json type\n");
+      // No items, check for an error
+      json_object *error_id = json_object_object_get(jobj, "error_id");
+      if (error_id) {
+        json_object *error_msg = json_object_object_get(jobj, "error_message");
+        json_object *error_name = json_object_object_get(jobj, "error_name");
+        fprintf(stderr, "Error %d [%s]: %s\n"
+          , json_object_get_int(error_id)
+          , json_object_get_string(error_name)
+          , json_object_get_string(error_msg));
+        exit(1);
+      }
     }
   }
 
