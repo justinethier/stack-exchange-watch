@@ -18,30 +18,26 @@ void watch(int page_size, int poll_rate_mins) {
   char url[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&min=10&sort=activity&tagged=a-song-of-ice-and-fire&site=scifi";
   int numOldQs = 0;
   int numNewQs = 0;
-
-// TODO: move test code to another file, and add to makefile
-// Test code:
-//  struct SeQuestion **oldQs = 
-//    se_load(getFileContents("results.json", NULL), &numOldQs, 10);
-//  struct SeQuestion **newQs = 
-//    se_load(getFileContents("results2.json", NULL), &numNewQs, 10);
-// TODO: let this return a value so we can test for it
-//  se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
-
   struct SeQuestion **oldQs = NULL;
   struct SeQuestion **newQs = NULL;
+  struct MemoryStruct *apiData = NULL;
+
   while(1) {
     tracef("Woke up, checking %s\n", url);
-    struct MemoryStruct *apiData = http_get(url);
-    newQs = se_load(apiData->memory, &numNewQs, page_size);
-    tracef("Received %d questions\n", numNewQs);
-    if (oldQs != NULL) {
-      trace("Checking for updates\n");
-      se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
+    apiData = http_get(url);
+    if (apiData == NULL || apiData->size == 0) {
+        fprintf(stderr, "Unable to retrieve data from URL %s\n", url);
+    } else {
+        newQs = se_load(apiData->memory, &numNewQs, page_size);
+        tracef("Received %d questions\n", numNewQs);
+        if (oldQs != NULL) {
+          trace("Checking for updates\n");
+          se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
+        }
+        se_free_questions(oldQs, numOldQs);
+        oldQs = newQs;
+        numOldQs = numNewQs;
     }
-    se_free_questions(oldQs, numOldQs);
-    oldQs = newQs;
-    numOldQs = numNewQs;
 
     sleep(60 * poll_rate_mins);
   }
