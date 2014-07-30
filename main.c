@@ -11,6 +11,8 @@
 #include "se-api.h"
 #include "util.h"
 
+static char *version = "0.1.0";
+
 char *apiURL(int page_size, const char *site, const char *tags) {
   char urlf[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=%d&order=desc&sort=activity&tagged=%s&site=%s";
   char *url = NULL;
@@ -91,14 +93,19 @@ int main(int argc, char **argv) {
     {"rate",        required_argument, NULL, 'r'},
     {"site",        required_argument, NULL, 's'},
     {"tagged",      required_argument, NULL, 't'},
+    {"version",     no_argument, NULL, 'v'},
     {NULL, 0, NULL, 0}
   };
 
-  while ((c = getopt_long(argc, argv, "p:r:s:t:", long_options, NULL)) != -1) {
+  while ((c = getopt_long(argc, argv, "p:r:s:t:v", long_options, NULL)) != -1) {
     switch (c) {
 //      case 'a':
 //        aflag = 1;
 //        break;
+      case 'v':
+printf("stack-watch version %s\n", version);
+// TODO: display author, home page, etc
+        return 0;
       case 'h':
         usage();
         return 0;
