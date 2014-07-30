@@ -2,7 +2,7 @@ CC = gcc
 CSTD = -std=c99
 CFLAGS = $(CSTD) -g
 
-COBJ = main http se-api util
+COBJ = se-api util
 CFILES = $(addsuffix .c, $(COBJ))
 #COBJS = $(addsuffix .o, $(COBJ))
 
@@ -11,7 +11,12 @@ CFILES = $(addsuffix .c, $(COBJ))
 # And libcurl
 #  install on Ubuntu: sudo apt-get install libcurl4-openssl-dev
 stack-watch: $(CFILES)
-	$(CC) $(CFLAGS) $(CFILES) -lcurl -ljson -o stack-watch
+	$(CC) $(CFLAGS) $(CFILES) main.c http.c -lcurl -ljson -o stack-watch
+
+.PHONY: test
+test:
+	$(CC) $(CFLAGS) $(CFILES) test.c -ljson -o stack-tests
+	./stack-tests
 
 .PHONY: clean
 clean:
