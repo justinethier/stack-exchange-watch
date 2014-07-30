@@ -4,18 +4,27 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include "http.h"
 #include "se-api.h"
 #include "util.h"
 
-// TODO: include command line arguments.
-// could specify API string, poll rate (in minutes, no less than 1) from cli
-// if none are specified, maybe read from a .rc file?
-// otherwise either give up or use default (not sure default search makes any sense, though. probably better to print link to the SE API query page)
-void watch(int page_size, int poll_rate_mins) {
-  char url[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&min=10&sort=activity&tagged=a-song-of-ice-and-fire&site=scifi";
+char *apiURL(int page_size, const char *site, const char *tags) {
+  char urlf[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=%d&order=desc&sort=activity&tagged=%s&site=%s";
+  char *url = NULL;
+  int maxlen = strlen(site) + strlen(tags) + strlen(urlf) + 10;
+
+  url = (char *)calloc(maxlen, sizeof(char));
+  snprintf(url, maxlen, urlf, page_size, tags, site);
+
+  return url;
+}
+
+void watch(int page_size, int poll_rate_mins, 
+           const char *site, const char *tags) {
+  char *url = apiURL(page_size, site, tags);
   int numOldQs = 0;
   int numNewQs = 0;
   struct SeQuestion **oldQs = NULL;
@@ -46,6 +55,27 @@ void watch(int page_size, int poll_rate_mins) {
   se_free_questions(newQs, numNewQs);
 }
 
+void usage() {
+  printf("Usage: stack-watch [OPTION]...                                                  \n");
+  printf("Monitor question activity on a Stack Exchange site.                             \n");
+  printf("                                                                                \n");
+  printf("  -s, --site        Site to monitor                                             \n");
+  printf("  -t, --tagged      Tag(s) to monitor                                           \n");
+  printf("  -p, --pagesize    Maximum number of questions to monitor at a time            \n");
+  printf("  -r, --rate        Rate at which to check for new activity, in minutes.        \n");
+  printf("                    This cannot be set less than 1 minute.                      \n");
+  printf("  --help            Display usage information                                   \n");
+  printf("                                                                                \n");
+  printf("With no OPTION, TBD                                                             \n");
+  printf("                                                                                \n");
+  printf("Examples:                                                                       \n");
+  printf("  stack-watch TBD                                                               \n");
+  printf("                                                                                \n");
+  printf("Report bugs to: <https://github.com/justinethier/stack-exchange-watch/issues>   \n");
+  printf("Project home page: <https://github.com/justinethier/stack-exchange-watch>       \n");
+  printf("Copyright (C) Justin Ethier, 2014                                               \n");
+}
+
 int main(int argc, char **argv) {
   int c;
   int pollrate = 15; // mins
@@ -53,11 +83,24 @@ int main(int argc, char **argv) {
   char *tags = "";
   char *site = "";
 
-  while ((c = getopt (argc, argv, "p:r:s:t:")) != -1) {
+  static struct option long_options[] =
+  {
+    {"help",        no_argument, NULL, 'h'},
+    {"pagesize",    required_argument, NULL, 'p'},
+    {"rate",        required_argument, NULL, 'r'},
+    {"site",        required_argument, NULL, 's'},
+    {"tagged",      required_argument, NULL, 't'},
+    {NULL, 0, NULL, 0}
+  };
+
+  while ((c = getopt_long(argc, argv, "p:r:s:t:", long_options, NULL)) != -1) {
     switch (c) {
 //      case 'a':
 //        aflag = 1;
 //        break;
+      case 'h':
+        usage();
+        return 0;
       case 'p':
         pagesize = atoi(optarg);
         break;
@@ -91,8 +134,7 @@ int main(int argc, char **argv) {
   printf("Rate = %d, Page Size = %d, Site = %s, Tags = %s\n", 
     pollrate, pagesize, site, tags);
 
-// TODO: pass args to core function:
-  watch(pagesize, pollrate);
+  watch(pagesize, pollrate, site, tags);
   return 0;
 }
 
