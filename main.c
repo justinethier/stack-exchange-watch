@@ -11,7 +11,37 @@
 #include "se-api.h"
 #include "util.h"
 
-static char *version = "0.1.0";
+static char *versionStr = "0.1.0";
+
+void version() {
+  printf("stack-watch %s\n", versionStr);
+  printf("Copyright (C) Justin Ethier, 2014                                               \n");
+  printf("                                                                                \n");
+  printf("Report bugs to: <https://github.com/justinethier/stack-exchange-watch/issues>   \n");
+  printf("Project home page: <https://github.com/justinethier/stack-exchange-watch>       \n");
+}
+
+void usage() {
+  printf("Usage: stack-watch [OPTION]...                                                  \n");
+  printf("Automatically monitor Q&A activity on a Stack Exchange site.                    \n");
+  printf("                                                                                \n");
+  printf("  -s, --site        Site to monitor                                             \n");
+  printf("  -t, --tagged      Tag(s) to monitor                                           \n");
+  printf("  -p, --pagesize    Maximum number of questions to monitor at a time            \n");
+  printf("  -r, --rate        Rate at which to check for new activity, in minutes.        \n");
+  printf("                    This cannot be set less than 1 minute.                      \n");
+  printf("  -v, --version     Display version information                                 \n");
+  printf("  --help            Display usage information                                   \n");
+  printf("                                                                                \n");
+  printf("With no OPTION, TBD                                                             \n");
+  printf("                                                                                \n");
+  printf("Examples:                                                                       \n");
+  printf("  stack-watch TBD                                                               \n");
+  printf("                                                                                \n");
+  printf("Report bugs to: <https://github.com/justinethier/stack-exchange-watch/issues>   \n");
+  printf("Project home page: <https://github.com/justinethier/stack-exchange-watch>       \n");
+  printf("Copyright (C) Justin Ethier, 2014                                               \n");
+}
 
 char *apiURL(int page_size, const char *site, const char *tags) {
   char urlf[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=%d&order=desc&sort=activity&tagged=%s&site=%s";
@@ -58,27 +88,6 @@ void watch(int page_size, int poll_rate_mins,
   se_free_questions(newQs, numNewQs);
 }
 
-void usage() {
-  printf("Usage: stack-watch [OPTION]...                                                  \n");
-  printf("Monitor question activity on a Stack Exchange site.                             \n");
-  printf("                                                                                \n");
-  printf("  -s, --site        Site to monitor                                             \n");
-  printf("  -t, --tagged      Tag(s) to monitor                                           \n");
-  printf("  -p, --pagesize    Maximum number of questions to monitor at a time            \n");
-  printf("  -r, --rate        Rate at which to check for new activity, in minutes.        \n");
-  printf("                    This cannot be set less than 1 minute.                      \n");
-  printf("  --help            Display usage information                                   \n");
-  printf("                                                                                \n");
-  printf("With no OPTION, TBD                                                             \n");
-  printf("                                                                                \n");
-  printf("Examples:                                                                       \n");
-  printf("  stack-watch TBD                                                               \n");
-  printf("                                                                                \n");
-  printf("Report bugs to: <https://github.com/justinethier/stack-exchange-watch/issues>   \n");
-  printf("Project home page: <https://github.com/justinethier/stack-exchange-watch>       \n");
-  printf("Copyright (C) Justin Ethier, 2014                                               \n");
-}
-
 int main(int argc, char **argv) {
   int c;
   int pollrate = 15; // mins
@@ -99,12 +108,8 @@ int main(int argc, char **argv) {
 
   while ((c = getopt_long(argc, argv, "p:r:s:t:v", long_options, NULL)) != -1) {
     switch (c) {
-//      case 'a':
-//        aflag = 1;
-//        break;
       case 'v':
-printf("stack-watch version %s\n", version);
-// TODO: display author, home page, etc
+        version();
         return 0;
       case 'h':
         usage();
@@ -125,21 +130,13 @@ printf("stack-watch version %s\n", version);
         tags = optarg;
         break;
       case '?':
-        //if (optopt == 'p' || optopt == 'r' || optopt == 's' || optopt == 't')
-        //  fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-        //else if (isprint (optopt))
-        //  fprintf (stderr, "Unknown option `-%c'.\n", optopt);
-        //else
-        //  fprintf (stderr,
-        //           "Unknown option character `\\x%x'.\n",
-        //           optopt);
         return 1;
       default:
         abort ();
     }
   }
 
-  printf("Rate = %d, Page Size = %d, Site = %s, Tags = %s\n", 
+  tracef("Starting up with rate = %d, page size = %d, site = %s, tags = %s\n", 
     pollrate, pagesize, site, tags);
 
   watch(pagesize, pollrate, site, tags);
