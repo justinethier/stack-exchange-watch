@@ -2,6 +2,7 @@
 #include <json/json.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include "se-api.h"
@@ -165,5 +166,16 @@ struct SeQuestion **se_load(char *string, int *numQs, int page_size) {
       json_object_put(jobj); // Free memory
   }
   return newQs;
+}
+
+char *se_api_url(int page_size, const char *site, const char *tags) {
+  char urlf[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=%d&order=desc&sort=activity&tagged=%s&site=%s";
+  char *url = NULL;
+  int maxlen = strlen(site) + strlen(tags) + strlen(urlf) + 10;
+
+  url = (char *)calloc(maxlen, sizeof(char));
+  snprintf(url, maxlen, urlf, page_size, tags, site);
+
+  return url;
 }
 

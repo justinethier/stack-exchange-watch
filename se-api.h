@@ -24,4 +24,6 @@ struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size,
                                        int page_size);
 struct SeQuestion **se_load(char *string, int *numQs, int page_size);
 
+char *se_api_url(int page_size, const char *site, const char *tags);
+
 #endif

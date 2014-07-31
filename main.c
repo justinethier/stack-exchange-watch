@@ -47,21 +47,10 @@ void usage() {
   printf("Copyright (C) Justin Ethier, 2014                                               \n");
 }
 
-char *apiURL(int page_size, const char *site, const char *tags) {
-  char urlf[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=%d&order=desc&sort=activity&tagged=%s&site=%s";
-  char *url = NULL;
-  int maxlen = strlen(site) + strlen(tags) + strlen(urlf) + 10;
-
-  url = (char *)calloc(maxlen, sizeof(char));
-  snprintf(url, maxlen, urlf, page_size, tags, site);
-
-  return url;
-}
-
 void watch(int page_size, int poll_rate_mins, 
            const char *site, const char *tags,
            int display_all) {
-  char *url = apiURL(page_size, site, tags);
+  char *url = se_api_url(page_size, site, tags);
   int numOldQs = 0;
   int numNewQs = 0;
   struct SeQuestion **oldQs = NULL;
