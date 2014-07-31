@@ -3,7 +3,7 @@
 Installation
 ------------
 
-`stack-watch` requires [libcurl](http://curl.haxx.se/libcurl/) and [json-c](https://github.com/json-c/json-c). These libraries can be installed using the following command on a Debian-based Linux distribution (such as Ubuntu):
+`stack-watch` requires [libcurl](http://curl.haxx.se/libcurl/) and [json-c](https://github.com/json-c/json-c). These libraries can be installed using the following commands on a Debian-based Linux distribution (such as Ubuntu):
 
     sudo apt-get install libjson0 libjson0-dev
     sudo apt-get install libcurl4-openssl-dev
