@@ -34,10 +34,13 @@ void usage() {
   printf("  -v, --version     Display version information                                 \n");
   printf("      --help        Display usage information                                   \n");
   printf("                                                                                \n");
-  printf("With no OPTION, TBD                                                             \n");
-  printf("                                                                                \n");
+//  printf("With no OPTION, TBD                                                             \n");
+//  printf("                                                                                \n");
   printf("Examples:                                                                       \n");
-  printf("  stack-watch TBD                                                               \n");
+  printf("  stack-watch -s scifi -t asoiaf      Display updates under the \"asoiaf tag\"  \n");
+  printf("                                      on the scifi site.                        \n");
+  printf("  stack-watch -a -t http              Display most recent \"http\" questions on \n");
+  printf("                                      the default site.                         \n");
   printf("                                                                                \n");
   printf("Report bugs to: <https://github.com/justinethier/stack-exchange-watch/issues>   \n");
   printf("Project home page: <https://github.com/justinethier/stack-exchange-watch>       \n");
