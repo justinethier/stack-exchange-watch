@@ -1,4 +1,13 @@
-// This code is based on memory-only curl example from http://curl.haxx.se/libcurl/c/example.html
+/**
+ * This file is part of stack-watch, a utility to monitor Stack Exchange.
+ * Copyright (C) 2014 Justin Ethier <justinethier@github>
+ *
+ * Please use github to submit patches and bug reports:
+ * https://github.com/justinethier/stack-exchange-watch
+ *
+ * This code is based on memory-only curl example from 
+ * http://curl.haxx.se/libcurl/c/example.html
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
