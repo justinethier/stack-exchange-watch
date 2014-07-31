@@ -1,7 +1,7 @@
 #ifndef __UTIL__
 #define __UTIL__
 
-#define DEBUG 1
+#define DEBUG 0
 #define tracef(fmt, ...) \
             do { if (DEBUG) fprintf(stderr, fmt, __VA_ARGS__); } while (0)
 #define trace(fmt) \
