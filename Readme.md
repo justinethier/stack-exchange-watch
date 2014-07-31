@@ -1,4 +1,4 @@
-`stack-watch` is a Unix command-line utility for monitoring activity on the [Stack Exchange](http://stackexchange.com/) network of sites. It monitors a given site and set of tags (optional), and will alert you periodically when updates are detected. Alternatively, `stack-watch` can periodically show you a list of questions with the most recent activity.
+`stack-watch` is a Unix command-line utility for monitoring activity on the [Stack Exchange](http://stackexchange.com/) network of sites. It monitors a given site and tag (optional), and will alert you periodically when updates are detected. Alternatively, `stack-watch` can periodically show you a list of questions with the most recent activity.
 
 Installation
 ------------
