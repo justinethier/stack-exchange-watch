@@ -14,13 +14,15 @@
 void test() {
   int numOldQs = 0;
   int numNewQs = 0;
+  char *oldF = getFileContents("data/results.json", NULL);
+  char *newF = getFileContents("data/results2.json", NULL);
 
-  struct SeQuestion **oldQs = 
-    se_load(getFileContents("data/results.json", NULL), &numOldQs, 10);
-  struct SeQuestion **newQs = 
-    se_load(getFileContents("data/results2.json", NULL), &numNewQs, 10);
+  struct SeQuestion **oldQs = se_load(oldF, &numOldQs, 10);
+  struct SeQuestion **newQs = se_load(newF, &numNewQs, 10);
   se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
 
+  free(oldF);
+  free(newF);
   se_free_questions(oldQs, numOldQs);
   se_free_questions(newQs, numNewQs);
 }

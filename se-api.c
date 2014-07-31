@@ -153,10 +153,17 @@ struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size,
 }
 
 struct SeQuestion **se_load(char *string, int *numQs, int page_size) {
-  json_object * jobj = json_tokener_parse(string);     
-  struct SeQuestion **newQs = se_parse_questions(jobj, numQs, page_size);
-  json_object_put(jobj);
-  free(string);
+  struct SeQuestion **newQs = NULL;
+  json_object * jobj = NULL;
+  
+  jobj = json_tokener_parse(string);
+  if (!jobj || is_error(jobj)) {
+      fprintf(stderr, "Unable to parse response: %s\n", string);
+      *numQs = 0;
+  } else {
+      newQs = se_parse_questions(jobj, numQs, page_size);
+      json_object_put(jobj); // Free memory
+  }
   return newQs;
 }
 

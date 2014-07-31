@@ -71,10 +71,11 @@ void watch(int page_size, int poll_rate_mins,
   while(1) {
     tracef("Woke up, checking %s\n", url);
     apiData = http_get(url);
-    if (apiData == NULL || apiData->size == 0) {
+    if (apiData == NULL || apiData->memory == NULL || apiData->size == 0) {
         fprintf(stderr, "Unable to retrieve data from URL %s\n", url);
     } else {
         newQs = se_load(apiData->memory, &numNewQs, page_size);
+        free(apiData->memory);
         tracef("Received %d questions\n", numNewQs);
         if (!display_all) {
           if (oldQs != NULL) {
