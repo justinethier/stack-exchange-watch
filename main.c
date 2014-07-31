@@ -25,13 +25,14 @@ void usage() {
   printf("Usage: stack-watch [OPTION]...                                                  \n");
   printf("Automatically monitor Q&A activity on a Stack Exchange site.                    \n");
   printf("                                                                                \n");
-  printf("  -s, --site        Site to monitor                                             \n");
-  printf("  -t, --tagged      Tag(s) to monitor                                           \n");
+  printf("  -a, --all         Display all matching questions, not just updates            \n");
   printf("  -p, --pagesize    Maximum number of questions to monitor at a time            \n");
   printf("  -r, --rate        Rate at which to check for new activity, in minutes.        \n");
   printf("                    This cannot be set less than 1 minute.                      \n");
+  printf("  -s, --site        Site to monitor                                             \n");
+  printf("  -t, --tagged      Tag(s) to monitor                                           \n");
   printf("  -v, --version     Display version information                                 \n");
-  printf("  --help            Display usage information                                   \n");
+  printf("      --help        Display usage information                                   \n");
   printf("                                                                                \n");
   printf("With no OPTION, TBD                                                             \n");
   printf("                                                                                \n");
@@ -55,7 +56,8 @@ char *apiURL(int page_size, const char *site, const char *tags) {
 }
 
 void watch(int page_size, int poll_rate_mins, 
-           const char *site, const char *tags) {
+           const char *site, const char *tags,
+           int display_all) {
   char *url = apiURL(page_size, site, tags);
   int numOldQs = 0;
   int numNewQs = 0;
@@ -71,13 +73,18 @@ void watch(int page_size, int poll_rate_mins,
     } else {
         newQs = se_load(apiData->memory, &numNewQs, page_size);
         tracef("Received %d questions\n", numNewQs);
-        if (oldQs != NULL) {
-          trace("Checking for updates\n");
+        if (!display_all) {
+          if (oldQs != NULL) {
+            trace("Checking for updates\n");
+            se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
+          }
+          se_free_questions(oldQs, numOldQs);
+          oldQs = newQs;
+          numOldQs = numNewQs;
+        } else {
           se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
+          se_free_questions(newQs, numNewQs);
         }
-        se_free_questions(oldQs, numOldQs);
-        oldQs = newQs;
-        numOldQs = numNewQs;
     }
 
     sleep(60 * poll_rate_mins);
@@ -90,6 +97,7 @@ void watch(int page_size, int poll_rate_mins,
 
 int main(int argc, char **argv) {
   int c;
+  int display_all = 0;
   int pollrate = 15; // mins
   int pagesize = 10;
   char *tags = "";
@@ -97,6 +105,7 @@ int main(int argc, char **argv) {
 
   static struct option long_options[] =
   {
+    {"all",         no_argument, NULL, 'a'},
     {"help",        no_argument, NULL, 'h'},
     {"pagesize",    required_argument, NULL, 'p'},
     {"rate",        required_argument, NULL, 'r'},
@@ -106,7 +115,7 @@ int main(int argc, char **argv) {
     {NULL, 0, NULL, 0}
   };
 
-  while ((c = getopt_long(argc, argv, "p:r:s:t:v", long_options, NULL)) != -1) {
+  while ((c = getopt_long(argc, argv, "ap:r:s:t:v", long_options, NULL)) != -1) {
     switch (c) {
       case 'v':
         version();
@@ -114,6 +123,9 @@ int main(int argc, char **argv) {
       case 'h':
         usage();
         return 0;
+      case 'a':
+        display_all = 1;
+        break;
       case 'p':
         pagesize = atoi(optarg);
         break;
@@ -139,7 +151,7 @@ int main(int argc, char **argv) {
   tracef("Starting up with rate = %d, page size = %d, site = %s, tags = %s\n", 
     pollrate, pagesize, site, tags);
 
-  watch(pagesize, pollrate, site, tags);
+  watch(pagesize, pollrate, site, tags, display_all);
   return 0;
 }
 
