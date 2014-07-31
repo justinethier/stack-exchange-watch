@@ -28,11 +28,11 @@ Command line options
 Examples
 --------
 
-Display updates under the "asoiaf tag" on the scifi site:
+Display updates under the `asoiaf` tag on the scifi site:
 
     stack-watch -s scifi -t asoiaf
     
-Display most recent "http" questions on the default site:
+Display most recent `http` questions on the default site:
 
     stack-watch -a -t http
                     
