@@ -126,7 +126,7 @@ struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size,
       json_object *quotaRem = json_object_object_get(jobj, "quota_remaining");
       if (quotaRem) {
           int remaining = json_object_get_int(quotaRem);
-          if (remaining < 500) {
+          if (remaining < 50) {
             json_object *quotaMax = json_object_object_get(jobj, "quota_max");
             fprintf(stderr, "Warning, remaining quota is %d of %d\n" 
               , remaining
