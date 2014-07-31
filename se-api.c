@@ -121,6 +121,18 @@ struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size,
       } else {
         printf("Unexpected json type\n");
       }
+
+      // Check API quota
+      json_object *quotaRem = json_object_object_get(jobj, "quota_remaining");
+      if (quotaRem) {
+          int remaining = json_object_get_int(quotaRem);
+          if (remaining < 500) {
+            json_object *quotaMax = json_object_object_get(jobj, "quota_max");
+            fprintf(stderr, "Warning, remaining quota is %d of %d\n" 
+              , remaining
+              , json_object_get_int(quotaMax));
+          }
+      }
     } else {
       // No items, check for an error
       json_object *error_id = json_object_object_get(jobj, "error_id");
