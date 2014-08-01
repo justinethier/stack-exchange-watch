@@ -21,8 +21,8 @@
 void test() {
   int numOldQs = 0;
   int numNewQs = 0;
-  char *oldF = getFileContents("data/results.json", NULL);
-  char *newF = getFileContents("data/results2.json", NULL);
+  char *oldF = get_file_contents("data/results.json", NULL);
+  char *newF = get_file_contents("data/results2.json", NULL);
 
   struct SeQuestion **oldQs = se_load(oldF, &numOldQs, 10);
   struct SeQuestion **newQs = se_load(newF, &numNewQs, 10);

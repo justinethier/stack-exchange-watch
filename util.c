@@ -16,7 +16,7 @@
  *  - Pointer to newly-allocated buffer
  *  - Size of buffer as an out parameter
  */
-char *getFileContents(const char *filename, long *outpSize) {
+char *get_file_contents(const char *filename, long *outpSize) {
   char *source = NULL;
   FILE *fp = fopen(filename, "r");
   if (fp != NULL) {
@@ -57,7 +57,7 @@ char *getFileContents(const char *filename, long *outpSize) {
  * Allocate a new filename with the given extension,
  * or NULL if an error occurs
  */
-char *fnameWithExt(const char *fname, const char *ext){
+char *fname_with_ext(const char *fname, const char *ext){
   int len = strlen(fname);
 
   if (len > 4 && fname[len - 4] == '.'){

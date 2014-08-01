@@ -14,7 +14,7 @@
 #define trace(fmt) \
             do { if (DEBUG) fprintf(stderr, fmt); } while (0)
 
-char *getFileContents(const char *filename, long *outpSize);
-char *fnameWithExt(const char *fname, const char *ext);
+char *get_file_contents(const char *filename, long *outpSize);
+char *fname_with_ext(const char *fname, const char *ext);
 char *_strdup (const char *s);
 #endif
