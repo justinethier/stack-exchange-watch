@@ -15,11 +15,31 @@
 #include "se-api.h"
 #include "util.h"
 
+/**
+ * Format a number for display, truncating thousands to "k".
+ * EG: 1001 => "1k"
+ *
+ * Space must already be allocated for buf, and the return
+ * pointer is just a convenient reference to buf.
+ */
+char *se_format_stat_num(char *buf, int bufsize, int num) {
+    if (num > 999999) {
+        snprintf(buf, bufsize, "%dm", num / 1000000);
+    } else if (num > 999) {
+        snprintf(buf, bufsize, "%dk", num / 1000);
+    } else {
+        snprintf(buf, bufsize, "%d", num);
+    }
+    return buf;
+}
+
 void se_print_question(struct SeQuestion *q) {
- printf("%2d %2d %4d - %s\n%s\n\n", 
+ char views_buf[255];
+
+ printf("%2d %2d %4s - %s\n%s\n\n", 
      q->score
    , q->answers
-   , q->views
+   , se_format_stat_num(views_buf, 255, q->views)
    , q->title
    , q->link); 
 }
