@@ -5,6 +5,7 @@
 # Please use github to submit patches and bug reports:
 # https://github.com/justinethier/stack-exchange-watch
 # 
+
 CC = gcc
 CSTD = -std=c99
 CFLAGS = $(CSTD) -g

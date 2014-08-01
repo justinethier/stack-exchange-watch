@@ -5,6 +5,7 @@
  * Please use github to submit patches and bug reports:
  * https://github.com/justinethier/stack-exchange-watch
  */
+
 #ifndef __SE_API_H__
 #define __SE_API_H__
 

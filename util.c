@@ -5,6 +5,7 @@
  * Please use github to submit patches and bug reports:
  * https://github.com/justinethier/stack-exchange-watch
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
