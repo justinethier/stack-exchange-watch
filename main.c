@@ -72,13 +72,14 @@ void watch(int page_size, int poll_rate_mins,
     } else {
         newQs = se_load(apiData->memory, &numNewQs, page_size);
         free(apiData->memory);
+        free(apiData);
         tracef("Received %d questions\n", numNewQs);
         if (!display_all) {
           if (oldQs != NULL) {
             trace("Checking for updates\n");
             se_check_for_updates(oldQs, numOldQs, newQs, numNewQs);
+            se_free_questions(oldQs, numOldQs);
           }
-          se_free_questions(oldQs, numOldQs);
           oldQs = newQs;
           numOldQs = numNewQs;
         } else {
@@ -92,7 +93,6 @@ void watch(int page_size, int poll_rate_mins,
 
   free(url);
   se_free_questions(oldQs, numOldQs);
-  se_free_questions(newQs, numNewQs);
 }
 
 int main(int argc, char **argv) {
