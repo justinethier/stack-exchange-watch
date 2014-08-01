@@ -8,12 +8,13 @@
 CC = gcc
 CSTD = -std=c99
 CFLAGS = $(CSTD) -g
+LIBS = -lcurl -ljson
 
-COBJ = se-api util main http 
+COBJ = se-api util main http entities
 CFILES = $(addsuffix .c, $(COBJ))
 COBJECTS=$(CFILES:.c=.o)
 
-TOBJ = se-api util test
+TOBJ = se-api util test entities
 TFILES = $(addsuffix .c, $(TOBJ))
 TOBJECTS=$(TFILES:.c=.o)
 
@@ -21,10 +22,10 @@ TOBJECTS=$(TFILES:.c=.o)
 	$(CC) $(CFLAGS) $< -c -o $@
 
 stack-watch: $(COBJECTS)
-	$(CC) $(CFLAGS) $(COBJECTS) -lcurl -ljson -o stack-watch
+	$(CC) $(CFLAGS) $(COBJECTS) $(LIBS) -o stack-watch
 
 test: $(TOBJECTS)
-	$(CC) $(CFLAGS) $(TOBJECTS) -ljson -o stack-tests
+	$(CC) $(CFLAGS) $(TOBJECTS) $(LIBS) -o stack-tests
 	./stack-tests
 
 .PHONY: clean

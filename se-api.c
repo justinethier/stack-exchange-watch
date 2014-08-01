@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "entities.h"
 #include "se-api.h"
 #include "util.h"
 
@@ -27,13 +28,15 @@ struct SeQuestion *se_new_question(int id, int score, int answers,
   int views, int last_activity_date, const char *title, const char *link) {
   struct SeQuestion *q = 
     (struct SeQuestion *)calloc(sizeof(struct SeQuestion), 1);
+  char *decoded_title = _strdup(title);
+  decode_html_entities_utf8(decoded_title, NULL);
   q->id =                 id;
   q->score =              score;
   q->answers =            answers;
   q->views =              views;
   q->last_activity_date = last_activity_date;
-  q->title = _strdup(title);
-  q->link = _strdup(link);
+  q->title =              decoded_title;
+  q->link =               _strdup(link);
   return q;
 }
 
