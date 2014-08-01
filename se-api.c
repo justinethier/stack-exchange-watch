@@ -5,6 +5,7 @@
  * Please use github to submit patches and bug reports:
  * https://github.com/justinethier/stack-exchange-watch
  */
+
 #include <json/json.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,8 +110,12 @@ void se_check_for_updates(struct SeQuestion **old, int numOld,
   }
 }
 
-// Based on JSON parser code from 
-// http://linuxprograms.wordpress.com/2010/08/19/json_parser_json-c/
+/**
+ * Build question structs from JSON object
+ *
+ * Based on JSON parser code from: 
+ * http://linuxprograms.wordpress.com/2010/08/19/json_parser_json-c/
+ */
 struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size, 
                                        int page_size) {
   struct SeQuestion **results = 
@@ -183,6 +188,9 @@ struct SeQuestion **se_parse_questions(json_object *jobj, int *result_size,
   return results;
 }
 
+/**
+ * Create question structures from raw JSON string
+ */
 struct SeQuestion **se_load(char *string, int *numQs, int page_size) {
   struct SeQuestion **newQs = NULL;
   json_object * jobj = NULL;
@@ -198,6 +206,9 @@ struct SeQuestion **se_load(char *string, int *numQs, int page_size) {
   return newQs;
 }
 
+/**
+ * Allocate new string containing URL of remote Stack Exchange API 
+ */
 char *se_api_url(int page_size, const char *site, const char *tags) {
   char urlf[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=%d&order=desc&sort=activity&tagged=%s&site=%s";
   char *url = NULL;
