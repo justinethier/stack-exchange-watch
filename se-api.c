@@ -24,9 +24,9 @@
  */
 char *se_format_stat_num(char *buf, int bufsize, int num) {
     if (num > 999999) {
-        snprintf(buf, bufsize, "%dm", num / 1000000);
+        snprintf(buf, bufsize, "%dm", (num + 500000) / 1000000);
     } else if (num > 999) {
-        snprintf(buf, bufsize, "%dk", num / 1000);
+        snprintf(buf, bufsize, "%dk", (num + 500) / 1000);
     } else {
         snprintf(buf, bufsize, "%d", num);
     }
