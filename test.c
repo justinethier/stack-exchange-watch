@@ -15,10 +15,6 @@
 #include "se-api.h"
 #include "util.h"
 
-// TODO: include command line arguments.
-// could specify API string, poll rate (in minutes, no less than 1) from cli
-// if none are specified, maybe read from a .rc file?
-// otherwise either give up or use default (not sure default search makes any sense, though. probably better to print link to the SE API query page)
 void test() {
   int numOldQs = 0;
   int numNewQs = 0;
