@@ -1,5 +1,6 @@
-/*	Copyright 2012 Christoph Gartner
-	Distributed under the Boost Software License, Version 1.0
+/*
+    Copyright 2012 Christoph Gartner
+    Distributed under the Boost Software License, Version 1.0
 */
 
 #ifndef DECODE_HTML_ENTITIES_UTF8_
