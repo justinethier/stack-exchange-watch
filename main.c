@@ -5,6 +5,7 @@
  * Please use github to submit patches and bug reports:
  * https://github.com/justinethier/stack-exchange-watch
  */
+
 #include <curl/curl.h>
 #include <json/json.h>
 #include <ctype.h>

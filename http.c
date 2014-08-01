@@ -8,11 +8,11 @@
  * This code is based on memory-only curl example from 
  * http://curl.haxx.se/libcurl/c/example.html
  */
+
+#include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
- 
-#include <curl/curl.h>
 #include "http.h"
  
 static size_t
