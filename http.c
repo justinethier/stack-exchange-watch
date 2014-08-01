@@ -88,21 +88,9 @@ struct MemoryStruct *http_get(const char *url) {
   /* cleanup curl stuff */ 
   curl_easy_cleanup(curl_handle);
  
-//  if(chunk.memory)
-//    free(chunk.memory);
- 
   /* we're done with libcurl, so clean it up */ 
   curl_global_cleanup();
  
   return chunk;
 }
 
-// int main(void)
-// {
-//   char url[] = "http://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&min=10&sort=activity&tagged=a-song-of-ice-and-fire&site=scifi";
-//   struct MemoryStruct *raw = http_get(url);
-//   printf("%s\n", raw->memory);
-// 
-//   if (raw->memory) free(raw->memory);
-//   free(raw);
-// }
