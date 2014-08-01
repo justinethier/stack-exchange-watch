@@ -21,10 +21,10 @@ TOBJECTS=$(TFILES:.c=.o)
 %.o: %.c %.h
 	$(CC) $(CFLAGS) $< -c -o $@
 
-stack-watch: $(COBJECTS)
+stack-watch: $(COBJECTS) config.h
 	$(CC) $(CFLAGS) $(COBJECTS) $(LIBS) -o stack-watch
 
-test: $(TOBJECTS)
+test: $(TOBJECTS) config.h
 	$(CC) $(CFLAGS) $(TOBJECTS) $(LIBS) -o stack-tests
 	./stack-tests
 

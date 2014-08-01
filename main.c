@@ -14,14 +14,13 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "config.h"
 #include "http.h"
 #include "se-api.h"
 #include "util.h"
 
-static char *versionStr = "0.1.0";
-
 void version() {
-  printf("stack-watch %s\n", versionStr);
+  printf("stack-watch %s\n", VERSION_STR);
   printf("Copyright (C) Justin Ethier, 2014                                               \n");
   printf("                                                                                \n");
   printf("Report bugs to: <https://github.com/justinethier/stack-exchange-watch/issues>   \n");

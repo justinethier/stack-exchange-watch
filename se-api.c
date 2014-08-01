@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "config.h"
 #include "entities.h"
 #include "se-api.h"
 #include "util.h"
